@@ -99,8 +99,4 @@ public class PhotonService {
 
         return resultImg;
     }
-
-    public int compute(int content) {
-        return 1;
-    }
 }
