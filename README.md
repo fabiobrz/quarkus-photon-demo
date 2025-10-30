@@ -21,8 +21,8 @@ rustup target add wasm32-unknown-unknown
 and compile the example:
 
 ```bash
-cd photon/photon-example
-cargo build --release --target wasm32-unknown-unknown
+cd photon
+make build
 ```
 
 ## Notes
