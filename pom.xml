@@ -143,9 +143,7 @@
                         <configuration>
                             <name>org.acme.Photon</name>
                             <wasmFile>${project.basedir}/wasm/photon_example.wasm</wasmFile>
-                            <interpretedFunctions>
-                                <function>607</function>
-                            </interpretedFunctions>
+                            <interpreterFallback>WARN</interpreterFallback>
                         </configuration>
                     </execution>
                 </executions>
