@@ -12,10 +12,11 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-        <quarkus.platform.version>3.28.5</quarkus.platform.version>
+        <quarkus.platform.version>3.29.0</quarkus.platform.version>
         <skipITs>true</skipITs>
         <surefire-plugin.version>3.5.4</surefire-plugin.version>
         <chicory.version>1.5.3</chicory.version>
+        <quarkus-chicory.version>999-SNAPSHOT</quarkus-chicory.version>
     </properties>
 
     <dependencyManagement>
@@ -27,13 +28,12 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
             <dependency>
-				<groupId>com.dylibso.chicory</groupId>
-				<artifactId>bom</artifactId>
-				<version>${chicory.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-        	</dependency>
+                <groupId>io.quarkiverse</groupId>
+                <artifactId>quarkus-chicory</artifactId>
+                <version>${quarkus-chicory.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -41,28 +41,19 @@
         <dependency>
 			<groupId>com.dylibso.chicory</groupId>
 			<artifactId>compiler</artifactId>
+            <version>${chicory.version}</version>
 		</dependency>
 
         <dependency>
-            <groupId>org.ow2.asm</groupId>
-            <artifactId>asm</artifactId>
-            <version>9.9</version>
-        </dependency>
-        <dependency>
-            <groupId>org.ow2.asm</groupId>
-            <artifactId>asm-commons</artifactId>
-            <version>9.9</version>
-        </dependency>
-        <dependency>
-            <groupId>org.ow2.asm</groupId>
-            <artifactId>asm-util</artifactId>
-            <version>9.9</version>
+            <groupId>io.quarkiverse</groupId>
+            <artifactId>quarkus-chicory</artifactId>
         </dependency>
 
 		<dependency>
       		<groupId>com.dylibso.chicory</groupId>
       		<artifactId>annotations</artifactId>
       		<scope>provided</scope>
+            <version>${chicory.version}</version>
     	</dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
