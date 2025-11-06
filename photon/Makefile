@@ -6,5 +6,5 @@ clean:
 .PHONY: build
 build:
 	cd photon-example && cargo build --release --target wasm32-unknown-unknown
-	rm -f ../wasm/photon_example.wasm
+	rm -f ../src/main/resources/photon_example.wasm
 	cp photon-example/target/wasm32-unknown-unknown/release/photon_example.wasm ../src/main/resources
