@@ -7,7 +7,7 @@
 
     <properties>
         <compiler-plugin.version>3.14.0</compiler-plugin.version>
-        <maven.compiler.release>21</maven.compiler.release>
+        <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
@@ -40,8 +40,25 @@
     <dependencies>
         <dependency>
 			<groupId>com.dylibso.chicory</groupId>
-			<artifactId>runtime</artifactId>
+			<artifactId>compiler</artifactId>
 		</dependency>
+
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>9.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-commons</artifactId>
+            <version>9.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-util</artifactId>
+            <version>9.9</version>
+        </dependency>
+
 		<dependency>
       		<groupId>com.dylibso.chicory</groupId>
       		<artifactId>annotations</artifactId>
@@ -142,23 +159,10 @@
                         </goals>
                         <configuration>
                             <name>org.acme.Photon</name>
-                            <wasmFile>${project.basedir}/wasm/photon_example.wasm</wasmFile>
+                            <wasmFile>${project.basedir}/src/main/resources/photon_example.wasm</wasmFile>
                             <interpreterFallback>WARN</interpreterFallback>
                         </configuration>
                     </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>templating-maven-plugin</artifactId>
-                <version>3.0.0</version>
-                <executions>
-                <execution>
-                    <id>filtering-java-templates</id>
-                    <goals>
-                    <goal>filter-sources</goal>
-                    </goals>
-                </execution>
                 </executions>
             </plugin>
         </plugins>

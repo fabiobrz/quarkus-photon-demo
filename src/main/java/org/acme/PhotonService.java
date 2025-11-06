@@ -1,10 +1,15 @@
 package org.acme;
 
+import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Path;
 
+import com.dylibso.chicory.compiler.MachineFactoryCompiler;
 import com.dylibso.chicory.runtime.ByteArrayMemory;
 import com.dylibso.chicory.runtime.Instance;
+import com.dylibso.chicory.wasm.Parser;
 import io.quarkus.logging.Log;
+import io.quarkus.runtime.LaunchMode;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -18,12 +23,25 @@ public class PhotonService {
     private PhotonApi_ModuleExports photonApi;
 
 
-    public void setImage(byte[] image) {
-        instance = Instance.builder(Photon.load())
-                .withMachineFactory(Photon::create)
-                .withMemoryFactory(ByteArrayMemory::new)
-                .build();
+    public PhotonService() {
+        var module = Parser.parse(new File("./src/main/resources/photon_example.wasm"));
+
+        Instance.Builder builder = Instance.builder(module);
+
+        // In dev mode, use runtime compilation so that live reload works
+        if (LaunchMode.current() == LaunchMode.NORMAL) {
+            builder = builder.withMachineFactory(Photon::create);
+        } else {
+            builder = builder.withMachineFactory(MachineFactoryCompiler::compile)
+                    .withMemoryFactory(ByteArrayMemory::new);
+        }
+
+        instance = builder.build();
         photonApi = new PhotonApi_ModuleExports(instance);
+    }
+
+    public void setImage(byte[] image) {
+
 
         imagePtr = photonApi.alloc(image.length);
         instance.memory().write(imagePtr, image);
