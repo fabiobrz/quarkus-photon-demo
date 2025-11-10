@@ -1,48 +1,39 @@
 package org.acme;
 
-import java.io.File;
-import java.io.InputStream;
-import java.nio.file.Path;
-
-import com.dylibso.chicory.compiler.MachineFactoryCompiler;
-import com.dylibso.chicory.runtime.ByteArrayMemory;
 import com.dylibso.chicory.runtime.Instance;
-import com.dylibso.chicory.wasm.Parser;
+import io.quarkiverse.chicory.runtime.WasmModuleContext;
+import io.quarkiverse.chicory.runtime.WasmModuleContextRegistry;
 import io.quarkus.logging.Log;
-import io.quarkus.runtime.LaunchMode;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @ApplicationScoped
 public class PhotonService {
 
+    public static final String WASM_MODULE_CONTEXT_NAME = "photon";
+
     private int imagePtr;
     private int imageSize;
     private Instance instance;
     private PhotonApi_ModuleExports photonApi;
 
+    @Inject
+    WasmModuleContextRegistry wasmModuleContextRegistry;
 
-    public PhotonService() {
-        var module = Parser.parse(new File("./src/main/resources/photon_example.wasm"));
-
-        Instance.Builder builder = Instance.builder(module);
-
-        // In dev mode, use runtime compilation so that live reload works
-        if (LaunchMode.current() == LaunchMode.NORMAL) {
-            builder = builder.withMachineFactory(Photon::create);
-        } else {
-            builder = builder.withMachineFactory(MachineFactoryCompiler::compile)
-                    .withMemoryFactory(ByteArrayMemory::new);
+    @PostConstruct
+    public void init() {
+        WasmModuleContext wasmModuleContext = wasmModuleContextRegistry.getModuleContextById(WASM_MODULE_CONTEXT_NAME);
+        if (wasmModuleContext == null) {
+            throw new IllegalStateException(String.format("WasmModuleContext %s not found", WASM_MODULE_CONTEXT_NAME));
         }
-
-        instance = builder.build();
+        instance = wasmModuleContext.getInstance();
         photonApi = new PhotonApi_ModuleExports(instance);
     }
 
     public void setImage(byte[] image) {
-
-
         imagePtr = photonApi.alloc(image.length);
         instance.memory().write(imagePtr, image);
         imageSize = image.length;

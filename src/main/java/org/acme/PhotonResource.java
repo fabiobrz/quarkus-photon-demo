@@ -48,5 +48,4 @@ public class PhotonResource {
     public byte[] applyTransformation(@QueryParam("transformation") String transformation) {
         return service.applyTransformation(transformation);
     }
-
 }
