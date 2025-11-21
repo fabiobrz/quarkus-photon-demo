@@ -30,7 +30,7 @@ public class WasmResource {
             if (wasmModuleInputStream.available() <= 0) {
                 throw new IllegalArgumentException("ERROR: Wasm module NOT uploaded 0");
             }
-            wasmModuleContextRegistry.addWasmModuleContext(
+            wasmModuleContextRegistry.add(
                     WasmModuleContext.builder(id, Parser.parse(wasmModuleInputStream.readAllBytes()))
                             .build()
             );
@@ -42,6 +42,6 @@ public class WasmResource {
     @GET
     @Path("/wasm-module-context/all")
     public Response getAllModuleContexts() {
-        return Response.ok().entity(wasmModuleContextRegistry.getAllModuleContexts()).build();
+        return Response.ok().entity(wasmModuleContextRegistry.all()).build();
     }
 }

@@ -13,7 +13,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @ApplicationScoped
 public class PhotonService {
 
-    public static final String WASM_MODULE_CONTEXT_NAME = "photon";
+    public static final String WASM_MODULE_CONTEXT_NAME = "org.acme.Photon";
 
     private int imagePtr;
     private int imageSize;
@@ -25,11 +25,11 @@ public class PhotonService {
 
     @PostConstruct
     public void init() {
-        WasmModuleContext wasmModuleContext = wasmModuleContextRegistry.getModuleContextById(WASM_MODULE_CONTEXT_NAME);
+        WasmModuleContext wasmModuleContext = wasmModuleContextRegistry.get(WASM_MODULE_CONTEXT_NAME);
         if (wasmModuleContext == null) {
             throw new IllegalStateException(String.format("WasmModuleContext %s not found", WASM_MODULE_CONTEXT_NAME));
         }
-        instance = wasmModuleContext.getInstance();
+        instance = wasmModuleContext.instance();
         photonApi = new PhotonApi_ModuleExports(instance);
     }
 
