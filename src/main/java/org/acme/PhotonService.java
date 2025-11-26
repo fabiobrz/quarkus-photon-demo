@@ -1,19 +1,17 @@
 package org.acme;
 
 import com.dylibso.chicory.runtime.Instance;
-import io.quarkiverse.chicory.runtime.WasmModuleContext;
-import io.quarkiverse.chicory.runtime.WasmModuleContextRegistry;
+import io.quarkiverse.chicory.runtime.wasm.Wasm;
 import io.quarkus.logging.Log;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @ApplicationScoped
 public class PhotonService {
-
-    public static final String WASM_MODULE_CONTEXT_NAME = "org.acme.Photon";
 
     private int imagePtr;
     private int imageSize;
@@ -21,15 +19,12 @@ public class PhotonService {
     private PhotonApi_ModuleExports photonApi;
 
     @Inject
-    WasmModuleContextRegistry wasmModuleContextRegistry;
+    @Named("photon")
+    Wasm photonWasm;
 
     @PostConstruct
     public void init() {
-        WasmModuleContext wasmModuleContext = wasmModuleContextRegistry.get(WASM_MODULE_CONTEXT_NAME);
-        if (wasmModuleContext == null) {
-            throw new IllegalStateException(String.format("WasmModuleContext %s not found", WASM_MODULE_CONTEXT_NAME));
-        }
-        instance = wasmModuleContext.instance();
+        instance = photonWasm.chicoryInstance();
         photonApi = new PhotonApi_ModuleExports(instance);
     }
 
